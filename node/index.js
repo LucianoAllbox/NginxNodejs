@@ -27,7 +27,6 @@ app.get('/', (req, res) => {
             retorno = '<p><h1>Full Cycle Rocks!</h1></p>'
             Object.keys(rows).forEach(function(key) {
                 var row = rows[key];
-                console.log(row.name)
                 retorno = retorno + row.name + '<br>'
               });
             res.send(retorno)
