@@ -18,24 +18,27 @@ var retorno = ""
 //connection.query(sqlClear)
 
 app.get('/', (req, res) => {
-
     //A cada chamada inserir uma linha no banco
     var dataHora = new Date().toString().replace(/T/, ':').replace(/\.\w*/, '');
     const sql = "INSERT INTO people(name) values ('Luciano - " + dataHora + "')"
-    connection.query(sql)
-
-    //desolver a lista retornada do banco
-    connection.connect(function(err) {
+    connection.query(sql, function (err, result) {
         connection.query("SELECT name FROM people", function (err, rows) {
+            console.log(rows);
             retorno = '<p><h1>Full Cycle Rocks!</h1></p>'
-            rows.forEach(function(row) {
-                retorno = retorno + '<p>' + row.name + "</p>";
-            });      
+            Object.keys(rows).forEach(function(key) {
+                var row = rows[key];
+                console.log(row.name)
+                retorno = retorno + row.name + '<br>'
+              });
+            res.send(retorno)
         });
-        res.send(retorno)
     });
+
 })
 
 app.listen(port, ()=> {
+    //limpar para facilitar os testes
+    const sqlClear = "DELETE FROM people"
+    connection.query(sqlClear)
     console.log('Rodando na porta ' + port)
 })
